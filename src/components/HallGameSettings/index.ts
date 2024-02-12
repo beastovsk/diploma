@@ -1,0 +1,1 @@
+export { HallGameSettings } from "./HallGameSettings";

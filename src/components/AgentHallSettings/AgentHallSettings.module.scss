@@ -1,0 +1,28 @@
+.label {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
+	gap: 80px;
+
+	button {
+		justify-self: start;
+	}
+}
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-bottom: 20px;
+	width: 50%;
+
+	@media screen and (min-width: 1920px) {
+		width: 720px;
+	}
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 20px;
+}

@@ -1,0 +1,24 @@
+.input {
+	padding: 5px 15px;
+	border-radius: 5px;
+	border: 1px solid transparent;
+	color: #111;
+	transition: all 0.3s;
+	background-color: #fff;
+	font-weight: 500;
+
+	&:focus-visible {
+		outline: none !important;
+	}
+}
+
+.medium {
+	padding: 8px 15px;
+}
+.large {
+	padding: 10px 15px;
+}
+
+.isFullwidth {
+	width: 100%;
+}

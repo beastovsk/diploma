@@ -1,0 +1,1 @@
+export { StatisticTable } from "./StatisticTable";

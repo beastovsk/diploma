@@ -1,0 +1,30 @@
+.container {
+	max-width: 50%;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
+	@media screen and (min-width: 1920px) {
+		width: 720px;
+	}
+}
+.label {
+	display: grid;
+	grid-template-columns: 1fr 200px;
+	button {
+		justify-self: start;
+	}
+}
+.flex {
+	display: grid;
+	grid-template-columns: 1fr 200px;
+	button {
+		justify-self: start;
+	}
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}

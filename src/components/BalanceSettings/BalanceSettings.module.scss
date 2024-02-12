@@ -1,0 +1,49 @@
+.label {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	align-items: center;
+	gap: 80px;
+
+	button {
+		justify-self: start;
+	}
+}
+.container {
+	display: grid;
+	grid-template-columns: 1fr 2.5fr;
+	gap: 40px;
+}
+
+.account {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.header {
+	display: flex;
+	gap: 20px;
+}
+
+.row {
+	display: grid;
+	grid-template-columns: 0.5fr repeat(7, 1fr);
+	border-bottom: 1px solid #ffffff10;
+	padding: 10px 0px;
+
+	p {
+		justify-self: center;
+	}
+}
+
+.rowHeader {
+	background: #6b6b6b;
+	padding: 10px;
+	border-radius: 5px;
+	margin-top: 10px;
+}
+.content {
+	margin-top: 10px;
+	overflow-y: scroll;
+	height: 500px;
+}

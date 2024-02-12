@@ -1,0 +1,25 @@
+.container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.label {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+.flex {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.required {
+	color: red;
+}

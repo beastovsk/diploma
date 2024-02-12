@@ -1,0 +1,64 @@
+.button {
+	padding: 5px 24px;
+	border-radius: 5px;
+	border: 1px solid transparent;
+	color: #fff;
+	cursor: pointer;
+	transition: all 0.3s;
+
+	&:active {
+		opacity: 0.7;
+	}
+}
+
+.default {
+	background: #626262;
+
+	&:hover {
+		border: 1px solid #ffffff33;
+		background: inherit;
+	}
+}
+
+.primary {
+	background: #00ac4f;
+
+	&:hover {
+		background: #128245;
+	}
+}
+
+.danger {
+	background: #c73f46;
+
+	&:hover {
+		background: #c73f46;
+		opacity: 0.3;
+	}
+}
+.outlined {
+	background: inherit;
+	border: 1px solid #626262;
+
+	&:hover {
+		background: #626262;
+		border: 1px solid inherit;
+	}
+}
+.outlined {
+}
+
+.medium {
+	padding: 8px 24px;
+}
+.large {
+	padding: 10px 24px;
+}
+
+.disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+.isFullwidth {
+	width: 100%;
+}

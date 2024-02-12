@@ -1,0 +1,14 @@
+.container {
+	display: flex;
+	height: 100%;
+}
+
+.content {
+	padding: 10px;
+	width: 100%;
+	overflow-y: scroll;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
+}
