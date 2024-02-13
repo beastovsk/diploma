@@ -7,61 +7,73 @@ import loader from "../../assets/loader.svg";
 import { Button } from "../../shared";
 import { Switch, Input } from "antd";
 
-type SettingsProps = {
-	id: number;
-	activ: number;
-	name: string;
-	rate: number;
-	child: [];
-};
-
 export const GameSettings = () => {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const { mutate, isLoading } = useMutation(AgentGameSettings);
 	const { userInfo } = useProfileStore();
 
-	const [settings, setSettings] = useState<SettingsProps[] | []>([]);
-	const [stack, setStack] = useState<
-		{ id: number; rate: number; activ: number }[]
-	>([]);
+	const [games, setGames] = useState([]);
+	const [update, setUpdate] = useState<{ [id: string]: string | number }>({});
+
 	useEffect(() => {
 		const currentId = pathname.split("/").at(-2);
+
+		setGames([]);
+		setUpdate({});
+
 		if (currentId === String(userInfo?.id)) {
 			return navigate("/dashboard/settings");
 		}
 		mutate(
 			{ id: currentId },
 			{
-				onSuccess: (res) => {
-					setSettings(res.data.content);
-					const result: SettingsProps[] = [];
-					res.data.content.map(
-						({ id, activ, rate, child }: SettingsProps) => {
-							if (child && child.length) {
-								child.map((item: SettingsProps) => {
-									const { id, activ, rate } = item;
-									result.push({
-										id,
-										activ,
-										rate,
-									} as SettingsProps);
-								});
-							}
-							result.push({ id, activ, rate } as SettingsProps);
-						}
+				onSuccess: ({ data }) => {
+					setGames(
+						data.content.map(({ id, name, activ, child }) => ({
+							id,
+							name,
+							activ,
+							child: child?.map(({ id, name, activ, rate }) => ({
+								id,
+								name,
+								activ,
+								rate,
+							})),
+						}))
 					);
-					setStack(
-						result as SetStateAction<
-							{ id: number; rate: number; activ: number }[]
-						>
+					const currentItem: SetStateAction<{
+						[id: string]: string | number;
+					}> = {};
+					const providersUpdate = [];
+
+					data.content.map(({ id, name, activ, child }) => {
+						if (child) {
+							providersUpdate.push({
+								id,
+								activ,
+								child: child.map(({ id, activ, rate }) => ({
+									id,
+									activ,
+									rate,
+								})),
+							});
+						}
+						currentItem[name] = activ;
+					});
+					setUpdate(
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-expect-error
+						providersUpdate.length // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+							? providersUpdate
+							: currentItem
 					);
 				},
 			}
 		);
 	}, [pathname]);
 
-	if (!settings) {
+	if (!games) {
 		return (
 			<div className="loader">
 				<img src={loader} width={50} height={50} />
@@ -69,107 +81,326 @@ export const GameSettings = () => {
 		);
 	}
 
-	const handleChange = ({
-		id,
-		activ,
-		rate,
-	}: {
-		id: number;
-		activ?: number;
-		rate?: number;
-	}) => {
-		const current = stack.findIndex((item) => item.id === id);
-		if (activ !== undefined) {
-			const { id, rate } = stack[current];
-			const newArr = [
-				...stack.slice(0, current),
-				{ id, activ, rate },
-				...stack.slice(current + 1),
-			];
-			setStack(newArr);
-		}
-
-		if (rate !== undefined) {
-			const { id, activ } = stack[current];
-			const newArr = [
-				...stack.slice(0, current),
-				{ id, activ, rate },
-				...stack.slice(current + 1),
-			];
-			setStack(newArr);
-		}
-	};
-
 	const handleSubmitForm = () => {
 		const currentId = pathname.split("/").at(-2);
 
-		mutate(
-			{
-				id: currentId,
-				update: stack,
-			},
-		);
+		mutate({
+			id: currentId,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			update,
+		});
 	};
 
 	return (
 		<div className={s.container}>
-			<div className={s.form}>
-				{settings.map(({ id, child, name }) => (
-					<div key={id}>
-						<div className={s.grid}>
-							<span>{name}</span>
-							<Switch
-								value={Boolean(
-									stack.find((item) => item.id === id)?.activ
-								)}
-								onChange={(e) =>
-									handleChange({
+			<div className={s.wrapper}>
+				{games.map(({ id: gameId, activ: gameActiv, name, child }) => {
+					if (child) {
+						return (
+							<div>
+								<label
+									className={s.label}
+									style={{ width: "40%" }}
+								>
+									<h2>{name}</h2>
+									<Switch
+										value={
+											update // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+												// @ts-expect-error
+												.find(
+													(item: { id: string }) =>
+														gameId == item.id
+												).activ == 1
+												? true
+												: false
+										}
+										onChange={(val) =>
+											setUpdate(
+												// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+												// @ts-expect-error
+												(prev) => {
+													const currentChilds = // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														update.find(
+															(item: {
+																id: string;
+															}) =>
+																gameId ==
+																item.id
+														).child;
+
+													const currentIndex = // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														update.findIndex(
+															(item: {
+																id: string;
+															}) =>
+																gameId ==
+																item.id
+														);
+
+													const prevElems = [
+														// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														...prev.slice(
+															0,
+															currentIndex
+														), // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														...prev.slice(
+															currentIndex + 1
+														),
+													];
+
+													return [
+														...prevElems,
+														{
+															id: gameId,
+															activ: val ? 1 : 0,
+															child: currentChilds,
+														},
+													];
+												}
+											)
+										}
+									/>
+								</label>
+								{child.map(
+									({
 										id,
-										activ: e ? 1 : 0,
-									})
+										name,
+										activ,
+										rate,
+									}: {
+										id: string;
+										name: string;
+										activ: number;
+										rate: string;
+									}) => (
+										<div className={s.item}>
+											<div>{name}</div>
+											<Switch
+												value={
+													update // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														.find(
+															({
+																id,
+															}: {
+																id: string;
+															}) => gameId == id
+														)
+														.child.find(
+															(child: {
+																id: string;
+															}) => id == child.id
+														).activ == 1
+														? true
+														: false
+												}
+												onChange={(val) =>
+													setUpdate(
+														// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														(prev) => {
+															const currentChilds = // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																update.find(
+																	({
+																		id,
+																	}: {
+																		id: string;
+																	}) =>
+																		gameId ==
+																		id
+																).child;
+															const currentChildIndex =
+																currentChilds.findIndex(
+																	(child: {
+																		id: string;
+																	}) =>
+																		child.id ===
+																		id
+																);
+															const currentIndex = // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																update.findIndex(
+																	({
+																		id,
+																	}: {
+																		id: string;
+																	}) =>
+																		gameId ==
+																		id
+																);
+
+															const prevElems = [
+																// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																...prev.slice(
+																	0,
+																	currentIndex
+																), // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																...prev.slice(
+																	currentIndex +
+																		1
+																),
+															];
+															const prevChildElems =
+																[
+																	...currentChilds.slice(
+																		0,
+																		currentChildIndex
+																	),
+																	...currentChilds.slice(
+																		currentChildIndex +
+																			1
+																	),
+																];
+
+															return [
+																...prevElems,
+																{
+																	id: gameId,
+																	activ: gameActiv,
+																	child: [
+																		...prevChildElems,
+
+																		{
+																			id,
+																			activ: val
+																				? 1
+																				: 0,
+																			rate,
+																		},
+																	],
+																},
+															];
+														}
+													)
+												}
+											/>
+											<Input
+												value={
+													update // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														.find(
+															({
+																id,
+															}: {
+																id: string;
+															}) => gameId == id
+														)
+														.child.find(
+															(child: {
+																id: string;
+															}) => id == child.id
+														).rate
+												}
+												onChange={(
+													val: React.ChangeEvent<HTMLInputElement>
+												) =>
+													setUpdate(
+														// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+														// @ts-expect-error
+														(prev) => {
+															const currentChilds = // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																update.find(
+																	({ id }) =>
+																		gameId ==
+																		id
+																).child;
+															const currentChildIndex =
+																currentChilds.findIndex(
+																	(child: {
+																		id: string;
+																	}) =>
+																		child.id ===
+																		id
+																);
+															const currentIndex = // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																update.findIndex(
+																	({
+																		id,
+																	}: {
+																		id: string;
+																	}) =>
+																		gameId ==
+																		id
+																);
+
+															const prevElems = [
+																// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																...prev.slice(
+																	0,
+																	currentIndex
+																), // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-expect-error
+																...prev.slice(
+																	currentIndex +
+																		1
+																),
+															];
+															const prevChildElems =
+																[
+																	...currentChilds.slice(
+																		0,
+																		currentChildIndex
+																	),
+																	...currentChilds.slice(
+																		currentChildIndex +
+																			1
+																	),
+																];
+
+															return [
+																...prevElems,
+																{
+																	id: gameId,
+																	activ: gameActiv,
+																	child: [
+																		...prevChildElems,
+
+																		{
+																			id,
+																			activ,
+																			rate: val
+																				.target
+																				.value,
+																		},
+																	],
+																},
+															];
+														}
+													)
+												}
+											/>
+										</div>
+									)
+								)}
+							</div>
+						);
+					}
+					return (
+						<div className={s.label}>
+							{name}
+							<Switch
+								value={Boolean(update[name])}
+								onChange={(val) =>
+									setUpdate((prev) => ({
+										...prev,
+										[name]: val ? 1 : 0,
+									}))
 								}
 							/>
 						</div>
-						<div>
-							{child.map(({ id, name }) => (
-								<div
-									key={id}
-									className={s.grid}
-									style={{ marginLeft: "50px" }}
-								>
-									<span>{name}</span>
-									<Switch
-										value={Boolean(
-											stack.find(
-												(item: { id: number }) =>
-													item.id === id
-											)?.activ
-										)}
-										onChange={(e) =>
-											handleChange({
-												id,
-												activ: e ? 1 : 0,
-											})
-										}
-									/>
-									<Input
-										value={
-											stack.find((item) => item.id === id)
-												?.rate
-										}
-										style={{ width: "50px" }}
-										onChange={(e) =>
-											handleChange({
-												id,
-												rate: Number(e.target.value),
-											})
-										}
-									/>
-								</div>
-							))}
-						</div>
-					</div>
-				))}
+					);
+				})}
 			</div>
 
 			<Button

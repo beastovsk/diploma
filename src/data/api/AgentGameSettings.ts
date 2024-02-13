@@ -5,7 +5,7 @@ export const AgentGameSettings = ({
 	update,
 }: {
 	id: string;
-	update?: { id: number; activ: number; rate: number }[];
+	update?: Record<string, object>;
 }) => {
 	return axios.post(
 		"http://localhost/index.php",

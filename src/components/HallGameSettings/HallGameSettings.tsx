@@ -45,31 +45,20 @@ export const HallGameSettings = () => {
 					const currentItem: SetStateAction<{
 						[id: string]: string | number;
 					}> = {};
-					let providersUpdate:
-						| string
-						| object[]
-						| SetStateAction<{ [id: string]: string | number }> =
-						[];
+					const providersUpdate = [];
+
 					data.content.map(
 						({ id, name, activ, child }: SettingsContent) => {
-							if (child?.length) {
-								providersUpdate = [
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-expect-error
-									...providersUpdate,
-									{
+							if (child) {
+								providersUpdate.push({
+									id,
+									activ,
+									child: child.map(({ id, activ, rate }) => ({
 										id,
 										activ,
-										child: child.map(
-											({ id, activ, rate }) => ({
-												id,
-												activ,
-												rate,
-											})
-										),
-									},
-								];
-								return;
+										rate,
+									})),
+								});
 							}
 							currentItem[name] = activ;
 						}
@@ -116,6 +105,8 @@ export const HallGameSettings = () => {
 		);
 	};
 
+	console.log(update);
+
 	return (
 		<>
 			{games.length && update ? (
@@ -128,7 +119,7 @@ export const HallGameSettings = () => {
 								name,
 								child,
 							}: SettingsContent) => {
-								if (child?.length) {
+								if (child) {
 									return (
 										<div>
 											<label
