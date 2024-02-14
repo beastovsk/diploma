@@ -1,3 +1,4 @@
+export { HallRtpSettings } from "./HallRtpSettings";
 export { Sidebar } from "./Sidebar";
 export { StatisticTable } from "./StatisticTable";
 export { UsersFolder } from "./UsersFolder";

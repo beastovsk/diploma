@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router";
+import { Route, Routes, useLocation, useNavigate } from "react-router";
 import s from "./HallSettings.module.scss";
 import { useMutation } from "react-query";
 import {
@@ -22,6 +22,7 @@ import {
 	HallModulesSettings,
 	HallPlayersSessions,
 	HallPlayersSettings,
+	HallRtpSettings,
 	HallTestApiSettings,
 } from "../../components/";
 
@@ -131,11 +132,21 @@ export const HallSettings = () => {
 
 		const currentId = pathname.split("/")[3];
 		const settings = pathname.split("/").at(-1);
+		const page = pathname.split("/").at(-2);
 		setSettings([]);
 		setUpdate({});
 
-		if (Number.isNaN(Number(currentId)) || settings === "testApi") return;
+		if (
+			Number.isNaN(Number(currentId)) ||
+			settings === "testApi" ||
+			settings === "providers" ||
+			settings === "players" ||
+			page === "players" ||
+			settings === "rtp"
+		)
+			return;
 
+		console.log(settings);
 		const urls = pathname.split("/").slice(4, 6).join("/");
 
 		settingsMutate(
@@ -490,6 +501,7 @@ export const HallSettings = () => {
 					<HallTestApiSettings />
 					<HallPlayersSettings />
 					<HallPlayersSessions />
+					<HallRtpSettings />
 					<div className={s.content}>
 						{" "}
 						{settings.length ? (

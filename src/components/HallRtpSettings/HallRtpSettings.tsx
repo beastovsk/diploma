@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { getSessions } from "../../data";
+import { HallSettingsRtp, getSessions } from "../../data";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { DatePicker, Empty } from "antd";
@@ -7,7 +7,7 @@ import { Button } from "../../shared";
 import dayjs from "dayjs";
 import loader from "../../assets/loader.svg";
 
-import s from "./HallPlayersSessions.module.scss";
+import s from "./HallRtpSettings.module.scss";
 
 const getDateMonthAgo = (date) => {
 	const currentMonth = date.split(" ")[0].split("-")[1];
@@ -38,7 +38,7 @@ const getDate = (date = new Date()) => {
 // 	return `${newHours}:${newMinutes}`;
 // };
 
-export const HallPlayersSessions = () => {
+export const HallRtpSettings = () => {
 	const { pathname, search } = useLocation();
 	const navigate = useNavigate();
 	// const { filters } = useFilterStore();
@@ -50,17 +50,16 @@ export const HallPlayersSessions = () => {
 		time: ["", ""],
 	});
 	const [sessions, setSessions] = useState([]);
-	const page = pathname.split("/").slice(4, 6);
 
-	const { mutate, isSuccess, isLoading } = useMutation(getSessions);
+	const { mutate, isSuccess, isLoading } = useMutation(HallSettingsRtp);
 
 	useEffect(() => {
-		const player = pathname.split("/").at(-1);
-		const hallId = pathname.split("/").at(-3);
+		const page = pathname.split("/").at(-1);
+		const hallId = pathname.split("/").at(-2);
 		let date = [`${getDateMonthAgo(getDate())}`, `${getDate()}`];
 		setFiltersValue({ date: ["", ""], time: ["", ""] });
 
-		if (page.length === 2 && page[1] === "players") {
+		if (page === "rtp") {
 			if (search) {
 				const [from, to] = search.split("&");
 
@@ -76,15 +75,14 @@ export const HallPlayersSessions = () => {
 			}
 
 			mutate(
-				{ player, date, hallId },
-				{ onSuccess: ({ data }) => setSessions(data.content.list) }
+				{ date, hallId },
+				{ onSuccess: ({ data }) => setSessions(data.content) }
 			);
 		}
 	}, [pathname]);
 
 	const handleFiltersSubmit = () => {
-		const player = pathname.split("/").at(-1);
-		const hallId = pathname.split("/").at(-3);
+		const hallId = pathname.split("/").at(-2);
 		const { date, ...args } = filtersValue;
 		const fullDate = [
 			`${date[0] || getDateMonthAgo(getDate())}`,
@@ -101,7 +99,6 @@ export const HallPlayersSessions = () => {
 			{
 				hallId,
 				date: fullDate,
-				player,
 				...args,
 			},
 			{
@@ -114,7 +111,7 @@ export const HallPlayersSessions = () => {
 		);
 	};
 
-	return page.length === 2 && page[0] === "players" ? (
+	return pathname.split("/").at(-1) === "rtp" ? (
 		<div className={s.container}>
 			<div className={s.filter}>
 				<label className={s.label}>

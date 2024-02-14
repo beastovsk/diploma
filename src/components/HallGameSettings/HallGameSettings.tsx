@@ -31,7 +31,8 @@ export const HallGameSettings = () => {
 		if (
 			Number.isNaN(Number(currentId)) ||
 			currentPath !== "games" ||
-			currentCategory === "balance"
+			currentCategory === "balance" ||
+			currentCategory === "settings"
 		)
 			return;
 		const settings = pathname.split("/").at(-1);

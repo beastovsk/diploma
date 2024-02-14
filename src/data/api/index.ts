@@ -13,4 +13,5 @@ export { HallSettingsGames } from "./HallSettingsGames";
 export { HallSettingsModules } from "./HallSettingsModules";
 export { HallSettingsBalance } from "./HallSettingsBalance";
 export { BalanceOperation } from "./BalanceOperation";
+export { HallSettingsRtp } from "./HallSettingsRtp";
 export * from "./HallSettingsPlayers";

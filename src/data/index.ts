@@ -17,4 +17,5 @@ export {
 	BalanceOperation,
 	getPlayers,
 	getSessions,
+	HallSettingsRtp,
 } from "./api";
