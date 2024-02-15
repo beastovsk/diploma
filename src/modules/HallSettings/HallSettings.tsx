@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import s from "./HallSettings.module.scss";
 import { useMutation } from "react-query";
 import {
@@ -21,6 +21,7 @@ import {
 	HallGameSettings,
 	HallModulesSettings,
 	HallPlayersSessions,
+	HallPlayersSessionsLogs,
 	HallPlayersSettings,
 	HallRtpSettings,
 	HallTestApiSettings,
@@ -146,7 +147,6 @@ export const HallSettings = () => {
 		)
 			return;
 
-		console.log(settings);
 		const urls = pathname.split("/").slice(4, 6).join("/");
 
 		settingsMutate(
@@ -501,6 +501,7 @@ export const HallSettings = () => {
 					<HallTestApiSettings />
 					<HallPlayersSettings />
 					<HallPlayersSessions />
+					<HallPlayersSessionsLogs />
 					<HallRtpSettings />
 					<div className={s.content}>
 						{" "}

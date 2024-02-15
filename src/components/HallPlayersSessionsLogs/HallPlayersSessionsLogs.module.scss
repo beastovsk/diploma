@@ -1,0 +1,11 @@
+.label {
+	color: #6d6d6d;
+}
+.table {
+	margin-top: 30px;
+}
+.container {
+	@media screen and (min-width: 1920px) {
+		width: 1400px;
+	}
+}

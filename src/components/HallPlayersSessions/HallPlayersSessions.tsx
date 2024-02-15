@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import loader from "../../assets/loader.svg";
 
 import s from "./HallPlayersSessions.module.scss";
+import { NavLink } from "react-router-dom";
 
 const getDateMonthAgo = (date) => {
 	const currentMonth = date.split(" ")[0].split("-")[1];
@@ -51,6 +52,8 @@ export const HallPlayersSessions = () => {
 	});
 	const [sessions, setSessions] = useState([]);
 	const page = pathname.split("/").slice(4, 6);
+	const isVisible =
+		pathname.split("/").length === 6 && page.includes("players");
 
 	const { mutate, isSuccess, isLoading } = useMutation(getSessions);
 
@@ -60,7 +63,7 @@ export const HallPlayersSessions = () => {
 		let date = [`${getDateMonthAgo(getDate())}`, `${getDate()}`];
 		setFiltersValue({ date: ["", ""], time: ["", ""] });
 
-		if (page.length === 2 && page[1] === "players") {
+		if (isVisible) {
 			if (search) {
 				const [from, to] = search.split("&");
 
@@ -114,7 +117,7 @@ export const HallPlayersSessions = () => {
 		);
 	};
 
-	return page.length === 2 && page[0] === "players" ? (
+	return isVisible ? (
 		<div className={s.container}>
 			<div className={s.filter}>
 				<label className={s.label}>
@@ -268,7 +271,7 @@ export const HallPlayersSessions = () => {
 					<table>
 						<thead>
 							<tr>
-								{sessions.length
+								{sessions?.length
 									? Object.keys(sessions[0]).map((key) => (
 											<th key={key}>{key}</th>
 									  ))
@@ -276,13 +279,25 @@ export const HallPlayersSessions = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{sessions.length
+							{sessions?.length
 								? sessions.map((item) => (
 										<tr>
 											{Object.values(item).map(
-												(value: string) => (
-													<th>{value}</th>
-												)
+												(value: string, i) => {
+													//  i === 0 - первый столбец (id)
+													if (i === 0) {
+														return (
+															<th>
+																<NavLink
+																	to={`${pathname}/${value}`}
+																>
+																	{value}
+																</NavLink>
+															</th>
+														);
+													}
+													return <th>{value}</th>;
+												}
 											)}
 										</tr>
 								  ))

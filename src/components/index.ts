@@ -1,3 +1,4 @@
+export { HallPlayersSessionsLogs } from "./HallPlayersSessionsLogs";
 export { HallRtpSettings } from "./HallRtpSettings";
 export { Sidebar } from "./Sidebar";
 export { StatisticTable } from "./StatisticTable";

@@ -238,9 +238,7 @@ export const BalanceSettings = () => {
 						onChange={(e) =>
 							setFilterDate((prev) => [
 								getDate("from", new Date(e.$d)),
-								prev[1]
-									? prev[1]
-									: getDate("to", new Date(e.$d)),
+								prev[1] ? prev[1] : getDate("to", new Date()),
 							])
 						}
 					/>
@@ -252,9 +250,7 @@ export const BalanceSettings = () => {
 						}
 						onChange={(e) =>
 							setFilterDate((prev) => [
-								prev[0]
-									? prev[0]
-									: getDate("from", new Date(e.$d)),
+								prev[0] ? prev[0] : getDate("from", new Date()),
 								getDate("to", new Date(e.$d)),
 							])
 						}

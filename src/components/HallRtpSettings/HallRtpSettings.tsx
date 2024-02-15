@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { HallSettingsRtp, getSessions } from "../../data";
+import { HallSettingsRtp } from "../../data";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { DatePicker, Empty } from "antd";

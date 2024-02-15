@@ -37,3 +37,19 @@ export const getSessions = (data: {
 		}
 	);
 };
+export const getSessionLog = (data: { sessionId: string }) => {
+	return axios.post(
+		"http://localhost/index.php",
+		{
+			cmd: "session.log",
+			token: localStorage.getItem("token"),
+			data,
+		},
+		{
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}
+	);
+};
