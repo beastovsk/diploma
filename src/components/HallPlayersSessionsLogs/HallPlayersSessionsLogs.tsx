@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import loader from "../../assets/loader.svg";
 
 import s from "./HallPlayersSessionsLogs.module.scss";
-import { Empty } from "antd";
+import { Empty, Tooltip } from "antd";
 
 export const HallPlayersSessionsLogs = () => {
 	const { mutate, isLoading } = useMutation(getSessionLog);
@@ -53,7 +53,7 @@ export const HallPlayersSessionsLogs = () => {
 			</div>
 		);
 	}
-
+	console.log(logs);
 	return isVisible ? (
 		<div className={s.container}>
 			<div>
@@ -71,25 +71,67 @@ export const HallPlayersSessionsLogs = () => {
 				{logs.length ? (
 					<table>
 						<thead>
-							<tr>
-								{logs.length
-									? Object.keys(logs[0]).map(
-											(item: string) => <th>{item}</th>
-									  )
-									: null}
-							</tr>
+							{logs.length ? (
+								<tr>
+									<th>id</th>
+									<th>action</th>
+									<th>before</th>
+									<th>bet</th>
+									<th>win</th>
+									<th>betInfo</th>
+									<th>matrix</th>
+									<th>winLines</th>
+									<th>dateTime</th>
+								</tr>
+							) : null}
 						</thead>
 						<tbody className={s.body}>
 							{logs.length
-								? logs.map((log) => (
-										<tr>
-											{Object.values(log).map(
-												(item: string) => (
-													<th>{item}</th>
-												)
-											)}
-										</tr>
-								  ))
+								? logs.map(
+										({
+											id,
+											actionId,
+											action,
+											error,
+											before,
+											bet,
+											win,
+											betInfo,
+											dateTime,
+											matrix,
+											winLines,
+											response,
+										}) => (
+											<tr
+												className={
+													error ? s.error : null
+												}
+											>
+												<th className={s.id}>
+													<Tooltip
+														title={response}
+														placement="bottom"
+														overlayInnerStyle={{
+															width: "max-content",
+														}}
+													>
+														{id}
+													</Tooltip>
+												</th>
+												<th>{action}</th>
+												<th>{before}</th>
+												<th>{bet}</th>
+												<th>{win}</th>
+												<th>{betInfo}</th>
+												<th className={s.flex}>
+													<span>{matrix}</span>
+													<span>{actionId}</span>
+												</th>
+												<th>{winLines}</th>
+												<th>{dateTime}</th>
+											</tr>
+										)
+								  )
 								: null}
 						</tbody>
 					</table>

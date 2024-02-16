@@ -9,3 +9,16 @@
 		width: 1400px;
 	}
 }
+.id {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.error {
+	background: #730d0d;
+}
+
+.flex {
+	display: flex;
+	flex-direction: column;
+}
