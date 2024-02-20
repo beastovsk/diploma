@@ -14,6 +14,8 @@ export const HallPlayersSessionsLogs = () => {
 		name: "",
 		label: "",
 		provider: "",
+		sessionId: "",
+		player: "",
 	});
 	const [logs, setLogs] = useState([]);
 	const currentUrl = pathname.split("/").slice(4, 8);
@@ -25,6 +27,8 @@ export const HallPlayersSessionsLogs = () => {
 			name: "",
 			label: "",
 			provider: "",
+			sessionId: "",
+			player: "",
 		});
 
 		if (!isVisible) return;
@@ -37,9 +41,11 @@ export const HallPlayersSessionsLogs = () => {
 					if (data.error) return;
 					const {
 						game: { name, label, provider },
+						session: { sessionId, player },
 						logs,
 					} = data.content;
-					setGame({ name, label, provider });
+					console.log({ name, label, provider });
+					setGame({ name, label, provider, sessionId, player });
 					setLogs(logs);
 				},
 			}
@@ -57,15 +63,33 @@ export const HallPlayersSessionsLogs = () => {
 	return isVisible ? (
 		<div className={s.container}>
 			<div>
-				<h2>
-					<span className={s.label}>name:</span> {game.name}
-				</h2>
-				<h2>
-					<span className={s.label}>label:</span> {game.label}
-				</h2>
-				<h2>
-					<span className={s.label}>provider:</span> {game.provider}
-				</h2>
+				<div className={s.row}>
+					<h2>
+						<span className={s.label}>name:</span>{" "}
+						{game.name || "-"}
+					</h2>
+					<span>{">"}</span>
+					<h2>
+						<span className={s.label}>label:</span>{" "}
+						{game.label || "-"}
+					</h2>
+					<span>{">"}</span>
+					<h2>
+						<span className={s.label}>provider:</span>{" "}
+						{game.provider || "-"}
+					</h2>
+				</div>
+				<div className={s.row}>
+					<h2>
+						<span className={s.label}>session id:</span>{" "}
+						{game.sessionId || "-"}
+					</h2>
+					<span>{">"}</span>
+					<h2>
+						<span className={s.label}>player:</span>{" "}
+						{game.player || "-"}
+					</h2>
+				</div>
 			</div>
 			<div className={s.table}>
 				{logs.length ? (
