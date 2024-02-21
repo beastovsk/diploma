@@ -14,7 +14,7 @@ type PageProps = {
 
 export const useProfileStore = create<PageProps>((set) => ({
 	token: localStorage.getItem("token"),
-	userInfo: { login: "", id: 0 },
+	userInfo: { login: "", id: null },
 	updateToken: (res: string) => set(() => ({ token: res })),
 	updateUserInfo: (res: UserProps) => set(() => ({ userInfo: res })),
 }));

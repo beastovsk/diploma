@@ -6,6 +6,7 @@ import {
 	SettingsAdmin,
 	NavBar,
 	BalanceSettings,
+	RtpTable,
 } from "../../components";
 import { AgentSettings, HallSettings } from "..";
 
@@ -46,7 +47,7 @@ export const Home = () => {
 						path="/agent/:id/balance/*"
 						element={<BalanceSettings />}
 					/>
-					<Route path="/rtp" element={<>/rtp</>} />
+					<Route path="/rtp" element={<RtpTable />} />
 					<Route path="/settings" element={<SettingsAdmin />} />
 				</Routes>
 			</div>

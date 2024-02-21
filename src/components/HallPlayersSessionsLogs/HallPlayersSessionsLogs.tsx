@@ -59,7 +59,7 @@ export const HallPlayersSessionsLogs = () => {
 			</div>
 		);
 	}
-	console.log(logs);
+
 	return isVisible ? (
 		<div className={s.container}>
 			<div>

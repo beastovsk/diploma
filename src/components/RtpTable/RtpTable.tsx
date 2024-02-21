@@ -1,5 +1,9 @@
 import { useMutation } from "react-query";
-import { getSessions, useFilterStore } from "../../data";
+import {
+	getRtpData,
+	useFilterStore,
+	useProfileStore,
+} from "../../data";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { DatePicker, Empty, Select, Skeleton } from "antd";
@@ -7,8 +11,7 @@ import { Button } from "../../shared";
 import dayjs from "dayjs";
 import loader from "../../assets/loader.svg";
 
-import s from "./HallPlayersSessions.module.scss";
-import { NavLink } from "react-router-dom";
+import s from "./RtpTable.module.scss";
 
 const getDateMonthAgo = (date) => {
 	const currentMonth = date.split(" ")[0].split("-")[1];
@@ -31,52 +34,45 @@ const getDate = (date = new Date()) => {
 	return `${date.getFullYear()}-${current.split("/").join("-")}`;
 };
 
-export const HallPlayersSessions = () => {
+export const RtpTable = () => {
 	const { pathname, search } = useLocation();
 	const navigate = useNavigate();
-	const { filters } = useFilterStore();
+	// const { filters } = useFilterStore();
 	const [filtersValue, setFiltersValue] = useState<{
 		date: string[];
 	}>({
 		date: ["", ""],
 	});
 	const [sessions, setSessions] = useState([]);
-	const page = pathname.split("/").slice(4, 6);
-	const isVisible =
-		pathname.split("/").length === 6 && page.includes("players");
-
-	const { mutate, isSuccess, isLoading } = useMutation(getSessions);
+	const { userInfo } = useProfileStore();
+	const { filters } = useFilterStore();
+	const { mutate, isSuccess, isLoading } = useMutation(getRtpData);
 
 	useEffect(() => {
-		const player = pathname.split("/").at(-1);
-		const hallId = pathname.split("/").at(-3);
 		let date = [`${getDateMonthAgo(getDate())}`, `${getDate()}`];
 		setFiltersValue({ date: ["", ""] });
 
-		if (isVisible) {
-			if (search) {
-				const [from, to] = search.split("&");
+		if (!userInfo?.id) return;
+		if (search) {
+			const [from, to] = search.split("&");
 
-				const [fromDate] = from.split("=")[1].split("_");
-				const [toDate] = to.split("=")[1].split("_");
+			const [fromDate] = from.split("=")[1].split("_");
+			const [toDate] = to.split("=")[1].split("_");
 
-				setFiltersValue({
-					date: [fromDate, toDate],
-				});
+			setFiltersValue({
+				date: [fromDate, toDate],
+			});
 
-				date = [`${fromDate}`, `${toDate}`];
-			}
-
-			mutate(
-				{ player, date, hallId },
-				{ onSuccess: ({ data }) => setSessions(data.content.list) }
-			);
+			date = [`${fromDate}`, `${toDate}`];
 		}
-	}, [pathname]);
+
+		mutate(
+			{ date, parent: userInfo?.id },
+			{ onSuccess: ({ data }) => setSessions(data.content) }
+		);
+	}, [userInfo]);
 
 	const handleFiltersSubmit = () => {
-		const player = pathname.split("/").at(-1);
-		const hallId = pathname.split("/").at(-3);
 		const { date, ...args } = filtersValue;
 		const fullDate = [
 			`${date[0] || getDateMonthAgo(getDate())}`,
@@ -91,22 +87,20 @@ export const HallPlayersSessions = () => {
 
 		mutate(
 			{
-				hallId,
+				parent: userInfo?.id,
 				date: fullDate,
-				player,
 				...args,
 			},
 			{
-				onSuccess: (statistic) => {
-					if (!Number.isNaN(hallId)) {
-						setSessions(statistic?.data?.content.list);
-					}
+				onSuccess: ({ data }) => {
+					if (data.error) return;
+					setSessions(data?.content);
 				},
 			}
 		);
 	};
 
-	return isVisible ? (
+	return pathname.split("/").at(-1) === "rtp" ? (
 		<div className={s.container}>
 			<div className={s.filter}>
 				<label className={s.label}>
@@ -236,21 +230,9 @@ export const HallPlayersSessions = () => {
 								? sessions.map((item) => (
 										<tr>
 											{Object.values(item).map(
-												(value: string, i) => {
-													//  i === 0 - первый столбец (id)
-													if (i === 0) {
-														return (
-															<th>
-																<NavLink
-																	to={`${pathname}/${value}`}
-																>
-																	{value}
-																</NavLink>
-															</th>
-														);
-													}
-													return <th>{value}</th>;
-												}
+												(value: string) => (
+													<th>{value}</th>
+												)
 											)}
 										</tr>
 								  ))

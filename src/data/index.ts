@@ -19,4 +19,5 @@ export {
 	getSessions,
 	getSessionLog,
 	HallSettingsRtp,
+	getRtpData,
 } from "./api";

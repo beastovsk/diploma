@@ -16,3 +16,4 @@ export { HallTestApiSettings } from "./HallTestApiSettings";
 export { AgentHallSettings } from "./AgentHallSettings";
 export { HallPlayersSettings } from "./HallPlayersSettings";
 export { HallPlayersSessions } from "./HallPlayersSessions";
+export { RtpTable } from "./RtpTable";
