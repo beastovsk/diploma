@@ -15,4 +15,5 @@ export { HallSettingsBalance } from "./HallSettingsBalance";
 export { BalanceOperation } from "./BalanceOperation";
 export { HallSettingsRtp } from "./HallSettingsRtp";
 export { getRtpData } from "./Rtp";
+export { SearchInfo } from "./SearchInfo";
 export * from "./HallSettingsPlayers";

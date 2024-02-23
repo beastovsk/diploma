@@ -7,6 +7,8 @@ import {
 	NavBar,
 	BalanceSettings,
 	RtpTable,
+	CreateAgent,
+	Search,
 } from "../../components";
 import { AgentSettings, HallSettings } from "..";
 
@@ -36,9 +38,17 @@ export const Home = () => {
 								<HallSettings />
 							</>
 						}
+					/>{" "}
+					<Route
+						path="/search"
+						element={
+							<>
+								<Search />
+							</>
+						}
 					/>
 					<Route path="/my-balance" element={<>/my-balance</>} />
-					<Route path="/create-agent" element={<>/create-agent</>} />
+					<Route path="/create-agent" element={<CreateAgent />} />
 					<Route
 						path="/agent/:id/settings"
 						element={<AgentSettings />}

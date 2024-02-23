@@ -17,3 +17,5 @@ export { AgentHallSettings } from "./AgentHallSettings";
 export { HallPlayersSettings } from "./HallPlayersSettings";
 export { HallPlayersSessions } from "./HallPlayersSessions";
 export { RtpTable } from "./RtpTable";
+export { CreateAgent } from "./CreateAgent";
+export { Search } from "./Search";

@@ -106,8 +106,6 @@ export const HallGameSettings = () => {
 		);
 	};
 
-	console.log(update);
-
 	return (
 		<>
 			{games.length && update ? (

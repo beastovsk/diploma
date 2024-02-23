@@ -13,7 +13,7 @@ import logout from "../../assets/logout.svg";
 import arrow from "../../assets/arrow.svg";
 import burger from "../../assets/burger.svg";
 
-import search from "../../assets/search.svg";
+import searchIcon from "../../assets/search.svg";
 
 import cx from "classnames";
 import { useLocation, useNavigate } from "react-router";
@@ -21,7 +21,7 @@ import { NavLink } from "react-router-dom";
 import { Accordeon } from "../../shared";
 import { AccountInfoRequest, usePageStore, useProfileStore } from "../../data";
 import { UsersFolder } from "../UsersFolder";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 const menuItems = [
@@ -44,6 +44,17 @@ export const Sidebar = () => {
 		isLoading,
 		isSuccess,
 	} = useQuery("info", () => AccountInfoRequest());
+	const [search, setSearch] = useState({
+		type: "login",
+		value: "",
+	});
+
+	const handleSearch = () => {
+		navigate({
+			pathname: "/dashboard/search",
+			search: `type=${search.type}&value=${search.value}`,
+		});
+	};
 
 	useEffect(() => {
 		if (!isSuccess) return;
@@ -103,19 +114,29 @@ export const Sidebar = () => {
 				</CSSTransition>
 			</div>
 			<div className={s.search}>
-				<img
-					className={s.buttonIcon}
-					src={search}
-					width={15}
-					height={15}
-				/>
+				<div onClick={handleSearch}>
+					<img
+						className={s.buttonIcon}
+						src={searchIcon}
+						width={15}
+						height={15}
+					/>
+				</div>
 				<CSSTransition
 					in={isSidebarOpen}
 					timeout={300}
 					classNames={"fade"}
 					unmountOnExit
 				>
-					<input className={s.input} />
+					<input
+						className={s.input}
+						onChange={(e) =>
+							setSearch((prev) => ({
+								...prev,
+								value: e.target.value,
+							}))
+						}
+					/>
 				</CSSTransition>
 				<CSSTransition
 					in={isSidebarOpen}
@@ -126,10 +147,16 @@ export const Sidebar = () => {
 					<Select
 						defaultValue="login"
 						className={s.select}
-						// onChange={handleChange}
+						onChange={(value) =>
+							setSearch((prev) => ({
+								...prev,
+								type: value,
+							}))
+						}
 						options={[
 							{ value: "login", label: "Login" },
-							{ value: "email", label: "Email" },
+							{ value: "player", label: "Player" },
+							{ value: "actionId", label: "Action ID" },
 						]}
 					/>
 				</CSSTransition>
