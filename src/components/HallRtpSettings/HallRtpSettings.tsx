@@ -54,31 +54,28 @@ export const HallRtpSettings = () => {
 	const { mutate, isSuccess, isLoading } = useMutation(HallSettingsRtp);
 
 	useEffect(() => {
-		const page = pathname.split("/").at(-1);
 		const hallId = pathname.split("/").at(-2);
 		let date = [`${getDateMonthAgo(getDate())}`, `${getDate()}`];
 		setFiltersValue({ date: ["", ""], time: ["", ""] });
 
-		if (page === "rtp") {
-			if (search) {
-				const [from, to] = search.split("&");
+		if (search) {
+			const [from, to] = search.split("&");
 
-				const [fromDate, fromTime] = from.split("=")[1].split("_");
-				const [toDate, toTime] = to.split("=")[1].split("_");
+			const [fromDate, fromTime] = from.split("=")[1].split("_");
+			const [toDate, toTime] = to.split("=")[1].split("_");
 
-				setFiltersValue({
-					date: [fromDate, toDate],
-					time: [fromTime, toTime],
-				});
+			setFiltersValue({
+				date: [fromDate, toDate],
+				time: [fromTime, toTime],
+			});
 
-				date = [`${fromDate}`, `${toDate}`];
-			}
-
-			mutate(
-				{ date, hallId },
-				{ onSuccess: ({ data }) => setSessions(data.content) }
-			);
+			date = [`${fromDate}`, `${toDate}`];
 		}
+
+		mutate(
+			{ date, hallId },
+			{ onSuccess: ({ data }) => setSessions(data.content) }
+		);
 	}, [pathname]);
 
 	const handleFiltersSubmit = () => {
@@ -111,7 +108,7 @@ export const HallRtpSettings = () => {
 		);
 	};
 
-	return pathname.split("/").at(-1) === "rtp" ? (
+	return (
 		<div className={s.container}>
 			<div className={s.filter}>
 				<label className={s.label}>
@@ -131,24 +128,6 @@ export const HallRtpSettings = () => {
 							}));
 						}}
 					/>
-					{/* <TimePicker
-						size="large"
-						format="HH:mm"
-						value={
-							filtersValue.time[0] === ""
-								? dayjs(`00:00`, "HH:mm")
-								: dayjs(filtersValue.time[0], "HH:mm")
-						}
-						onChange={(val) => {
-							setFiltersValue((prev) => ({
-								...prev,
-								time: [
-									getValidTime(val.$H, val.$m),
-									prev.time[1],
-								],
-							}));
-						}}
-					/> */}
 				</label>
 
 				<label className={s.label}>
@@ -168,24 +147,6 @@ export const HallRtpSettings = () => {
 							}));
 						}}
 					/>
-					{/* <TimePicker
-						size="large"
-						format="HH:mm"
-						value={
-							filtersValue.time[1] === ""
-								? dayjs(`23:59`, "HH:mm")
-								: dayjs(filtersValue.time[1], "HH:mm")
-						}
-						onChange={(val) => {
-							setFiltersValue((prev) => ({
-								...prev,
-								time: [
-									prev.time[0],
-									getValidTime(val.$H, val.$m),
-								],
-							}));
-						}}
-					/> */}
 				</label>
 
 				{/* {Object.entries(filters).length ? (
@@ -297,5 +258,5 @@ export const HallRtpSettings = () => {
 				)}
 			</div>
 		</div>
-	) : null;
+	);
 };

@@ -1,0 +1,1 @@
+export { MainHallSettings } from "./MainHallSettings";

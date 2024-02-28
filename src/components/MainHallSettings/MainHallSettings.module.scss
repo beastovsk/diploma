@@ -1,0 +1,51 @@
+.header {
+	display: flex;
+	gap: 10px;
+	border-bottom: 1px solid #d9d9d930;
+	padding-bottom: 20px;
+}
+
+.form {
+	width: 50%;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.settings {
+	margin-top: 30px;
+}
+.content {
+	@media screen and (min-width: 1920px) {
+		width: 720px;
+	}
+}
+.nested {
+	margin-top: 40px;
+}
+.row {
+	margin: 5px 0px;
+	width: 50%;
+	display: grid;
+	grid-template-columns: 1fr 50px;
+}
+.item {
+	margin: 5px 20px;
+	width: 50%;
+	display: grid;
+	grid-template-columns: 1fr 50px 50px;
+	gap: 20px;
+	align-items: center;
+}
+.label {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
+	gap: 80px;
+	margin: 10px 0;
+
+	button {
+		justify-self: start;
+	}
+}

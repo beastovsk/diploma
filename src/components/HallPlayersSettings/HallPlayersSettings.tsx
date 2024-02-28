@@ -53,12 +53,10 @@ export const HallPlayersSettings = () => {
 		login: "",
 	});
 	const [players, setPlayers] = useState([]);
-	const page = pathname.split("/").at(-1);
 
 	const { mutate, isSuccess, isLoading } = useMutation(getPlayers);
 
 	useEffect(() => {
-		const page = pathname.split("/").at(-1);
 		const hallId = pathname.split("/").at(-2);
 		let date = [
 			`${getDateMonthAgo(getDate())} 00:00`,
@@ -66,8 +64,6 @@ export const HallPlayersSettings = () => {
 		];
 
 		setFiltersValue({ date: ["", ""], time: ["", ""] });
-
-		if (page !== "players") return;
 
 		if (search) {
 			const [from, to, log] = search.split("&");
@@ -121,7 +117,7 @@ export const HallPlayersSettings = () => {
 		);
 	};
 
-	return page === "players" ? (
+	return (
 		<div className={s.container}>
 			<div className={s.filter}>
 				<label className={s.label}>
@@ -339,5 +335,5 @@ export const HallPlayersSettings = () => {
 				)}
 			</div>
 		</div>
-	) : null;
+	);
 };

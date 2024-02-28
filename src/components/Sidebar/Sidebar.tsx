@@ -1,4 +1,4 @@
-import { Select, Skeleton } from "antd";
+import { Select, Skeleton, notification } from "antd";
 import { CSSTransition } from "react-transition-group";
 import s from "./Sidebar.module.scss";
 
@@ -38,6 +38,7 @@ export const Sidebar = () => {
 	const { userInfo, updateUserInfo } = useProfileStore();
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
+	const [api, contextHolder] = notification.useNotification();
 	const { isSidebarOpen, setSidebarOpen } = usePageStore();
 	const {
 		data: userInfoAsync,
@@ -50,6 +51,9 @@ export const Sidebar = () => {
 	});
 
 	const handleSearch = () => {
+		if (search.value.length < 3) {
+			return openNotification({ error: "Мин. 3 символа" });
+		}
 		navigate({
 			pathname: "/dashboard/search",
 			search: `type=${search.type}&value=${search.value}`,
@@ -73,8 +77,20 @@ export const Sidebar = () => {
 		}
 	}, [isSuccess]);
 
+	const openNotification = (content: { error?: string }) => {
+		const { error } = content;
+
+		api.info({
+			message: error ? "Error" : "Success",
+			description: error ? error : "Successfully logged in",
+			placement: "topRight",
+		});
+	};
+
 	return (
 		<div className={cx(s.sidebar, { [s.closed]: !isSidebarOpen })}>
+			{contextHolder}
+
 			<div className={s.header}>
 				<button
 					className={s.button}

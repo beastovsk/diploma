@@ -61,14 +61,10 @@ export const BalanceSettings = () => {
 
 	useEffect(() => {
 		const currentId = pathname.split("/")[3];
-		const currentCategory = pathname.split("/").at(-1);
 		const currency = search.split("=")[1];
 
 		setAccount({} as SetStateAction<AccountProps>);
 		setUpdate({} as SetStateAction<RequestBalanceOperation>);
-
-		if (Number.isNaN(Number(currentId)) || currentCategory !== "balance")
-			return;
 
 		mutate(
 			{
@@ -127,11 +123,7 @@ export const BalanceSettings = () => {
 
 	const handleFilterLogs = () => {
 		const currentId = pathname.split("/")[3];
-		const currentCategory = pathname.split("/").at(-1);
 		const currency = search.split("=")[1];
-
-		if (Number.isNaN(Number(currentId)) || currentCategory !== "balance")
-			return;
 
 		mutate(
 			{

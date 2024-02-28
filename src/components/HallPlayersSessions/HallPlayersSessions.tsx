@@ -41,10 +41,6 @@ export const HallPlayersSessions = () => {
 		date: ["", ""],
 	});
 	const [sessions, setSessions] = useState([]);
-	const page = pathname.split("/").slice(4, 6);
-	const isVisible =
-		pathname.split("/").length === 6 && page.includes("players");
-
 	const { mutate, isSuccess, isLoading } = useMutation(getSessions);
 
 	useEffect(() => {
@@ -53,25 +49,23 @@ export const HallPlayersSessions = () => {
 		let date = [`${getDateMonthAgo(getDate())}`, `${getDate()}`];
 		setFiltersValue({ date: ["", ""] });
 
-		if (isVisible) {
-			if (search) {
-				const [from, to] = search.split("&");
+		if (search) {
+			const [from, to] = search.split("&");
 
-				const [fromDate] = from.split("=")[1].split("_");
-				const [toDate] = to.split("=")[1].split("_");
+			const [fromDate] = from.split("=")[1].split("_");
+			const [toDate] = to.split("=")[1].split("_");
 
-				setFiltersValue({
-					date: [fromDate, toDate],
-				});
+			setFiltersValue({
+				date: [fromDate, toDate],
+			});
 
-				date = [`${fromDate}`, `${toDate}`];
-			}
-
-			mutate(
-				{ player, date, hallId },
-				{ onSuccess: ({ data }) => setSessions(data.content.list) }
-			);
+			date = [`${fromDate}`, `${toDate}`];
 		}
+
+		mutate(
+			{ player, date, hallId },
+			{ onSuccess: ({ data }) => setSessions(data.content.list) }
+		);
 	}, [pathname]);
 
 	const handleFiltersSubmit = () => {
@@ -106,7 +100,7 @@ export const HallPlayersSessions = () => {
 		);
 	};
 
-	return isVisible ? (
+	return (
 		<div className={s.container}>
 			<div className={s.filter}>
 				<label className={s.label}>
@@ -268,5 +262,5 @@ export const HallPlayersSessions = () => {
 				)}
 			</div>
 		</div>
-	) : null;
+	);
 };

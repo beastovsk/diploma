@@ -18,8 +18,6 @@ export const HallPlayersSessionsLogs = () => {
 		player: "",
 	});
 	const [logs, setLogs] = useState([]);
-	const currentUrl = pathname.split("/").slice(4, 8);
-	const isVisible = currentUrl.length === 3 && currentUrl.includes("players");
 
 	useEffect(() => {
 		setLogs([]);
@@ -31,7 +29,6 @@ export const HallPlayersSessionsLogs = () => {
 			player: "",
 		});
 
-		if (!isVisible) return;
 		const sessionId = pathname.split("/").at(-1);
 
 		mutate(
@@ -60,7 +57,7 @@ export const HallPlayersSessionsLogs = () => {
 		);
 	}
 
-	return isVisible ? (
+	return (
 		<div className={s.container}>
 			<div>
 				<div className={s.row}>
@@ -164,5 +161,5 @@ export const HallPlayersSessionsLogs = () => {
 				)}
 			</div>
 		</div>
-	) : null;
+	);
 };

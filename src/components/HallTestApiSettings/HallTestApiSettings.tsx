@@ -74,8 +74,6 @@ export const HallTestApiSettings = () => {
 		setCmd("");
 		setResponse([]);
 
-		if (Number.isNaN(Number(hallId)) || settings !== "testApi") return;
-
 		mutate(
 			{ hallId, settings: [settings] },
 			{

@@ -22,19 +22,10 @@ export const HallGameSettings = () => {
 
 	useEffect(() => {
 		const currentId = pathname.split("/")[3];
-		const currentPath = pathname.split("/")[4];
-		const currentCategory = pathname.split("/")[5];
 
 		setGames([]);
 		setUpdate({});
 
-		if (
-			Number.isNaN(Number(currentId)) ||
-			currentPath !== "games" ||
-			currentCategory === "balance" ||
-			currentCategory === "settings"
-		)
-			return;
 		const settings = pathname.split("/").at(-1);
 
 		return gameSettingsMutate(
