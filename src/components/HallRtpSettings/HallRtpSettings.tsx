@@ -265,7 +265,7 @@ export const HallRtpSettings = () => {
 					<table>
 						<thead>
 							<tr>
-								{sessions.length
+								{sessions?.length
 									? Object.keys(sessions[0]).map((key) => (
 											<th key={key}>{key}</th>
 									  ))
@@ -273,7 +273,7 @@ export const HallRtpSettings = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{sessions.length
+							{sessions?.length
 								? sessions.map((item) => (
 										<tr>
 											{Object.values(item).map(

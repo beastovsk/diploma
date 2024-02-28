@@ -5,7 +5,7 @@ import {
 	HallSettingsInit,
 	HallSettings as HallSettingsAsync,
 } from "../../data";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useLayoutEffect, useState } from "react";
 import {
 	Button as ButtonNav,
 	Dropdown,
@@ -57,6 +57,8 @@ export const HallSettings = () => {
 	>([]);
 	const [settings, setSettings] = useState<SettingsProps[] | []>([]);
 	const [update, setUpdate] = useState<{ [id: string]: string | number }>({});
+	const page = pathname.split("/").at(-2);
+	const settingsLink = pathname.split("/").at(-1);
 
 	const handleSubmitForm = () => {
 		const currentId = pathname.split("/")[3];
@@ -128,22 +130,20 @@ export const HallSettings = () => {
 		);
 	}, []);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (!isButtonsSuccess) return;
 
 		const currentId = pathname.split("/")[3];
-		const settings = pathname.split("/").at(-1);
-		const page = pathname.split("/").at(-2);
 		setSettings([]);
 		setUpdate({});
 
 		if (
 			Number.isNaN(Number(currentId)) ||
-			settings === "testApi" ||
-			settings === "providers" ||
-			settings === "players" ||
+			settingsLink === "testApi" ||
+			settingsLink === "providers" ||
+			settingsLink === "players" ||
 			page === "players" ||
-			settings === "rtp"
+			settingsLink === "rtp"
 		)
 			return;
 
@@ -153,7 +153,9 @@ export const HallSettings = () => {
 			{
 				hallId: currentId,
 				settings:
-					urls !== "games/settings" ? [settings] : ["gamesSettings"],
+					urls !== "games/settings"
+						? [settingsLink]
+						: ["gamesSettings"],
 			},
 			{
 				onSuccess: ({ data }) => {
@@ -505,7 +507,11 @@ export const HallSettings = () => {
 					<HallRtpSettings />
 					<div className={s.content}>
 						{" "}
-						{settings.length ? (
+						{settingsLink !== "testApi" ||
+						settingsLink !== "providers" ||
+						settingsLink !== "players" ||
+						page !== "players" ||
+						settingsLink !== "rtp" ? (
 							<div className={s.form}>
 								<div>
 									{settings.map(({ id, elements }) => (

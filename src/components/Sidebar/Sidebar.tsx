@@ -154,9 +154,9 @@ export const Sidebar = () => {
 							}))
 						}
 						options={[
-							{ value: "login", label: "Login" },
-							{ value: "player", label: "Player" },
-							{ value: "actionId", label: "Action ID" },
+							{ value: "login", label: "LOGIN" },
+							{ value: "player", label: "PLAYERS" },
+							{ value: "actionId", label: "ACTION ID" },
 						]}
 					/>
 				</CSSTransition>
