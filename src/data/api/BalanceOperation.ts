@@ -21,3 +21,19 @@ export const BalanceOperation = (data: {
 		}
 	);
 };
+
+export const BalanceInfo = () => {
+	return axios.post(
+		"http://localhost/index.php",
+		{
+			cmd: "account.balance",
+			token: localStorage.getItem("token"),
+		},
+		{
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}
+	);
+};

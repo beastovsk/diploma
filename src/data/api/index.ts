@@ -12,7 +12,7 @@ export { HallSettings } from "./HallSettings";
 export { HallSettingsGames } from "./HallSettingsGames";
 export { HallSettingsModules } from "./HallSettingsModules";
 export { HallSettingsBalance } from "./HallSettingsBalance";
-export { BalanceOperation } from "./BalanceOperation";
+export { BalanceOperation, BalanceInfo } from "./BalanceOperation";
 export { HallSettingsRtp } from "./HallSettingsRtp";
 export { getRtpData } from "./Rtp";
 export { SearchInfo } from "./SearchInfo";

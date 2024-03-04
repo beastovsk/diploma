@@ -1,4 +1,4 @@
-import { Input, Select, Switch } from "antd";
+import { Input } from "antd";
 import s from "./SettingsAdmin.module.scss";
 import { ProfileSettings } from "../../data";
 import { useMutation } from "react-query";
@@ -8,9 +8,8 @@ import { Button } from "../../shared";
 
 type SettingsProps = {
 	id: string;
-	type: string;
+	edit: number;
 	value: string;
-	options?: string[];
 };
 
 export const SettingsAdmin = () => {
@@ -39,85 +38,28 @@ export const SettingsAdmin = () => {
 	}
 
 	const handleSubmitForm = () => {
-		mutate(
-			{
-				update,
-			},
-
-		);
+		mutate({
+			update,
+		});
 	};
 
 	return (
 		<div className={s.container}>
 			<div className={s.form}>
-				{settings.map(({ id, options, type, value }: SettingsProps) => {
-					if (type === "input" || type === "text") {
-						return (
-							<label className={s.label} key={id}>
-								{id}
-								<Input
-									disabled={type === "text"}
-									value={update[id] ? update[id] : value}
-									onChange={(e) =>
-										setUpdate((prev) => ({
-											...prev,
-											[id]: e.target.value,
-										}))
-									}
-								/>
-							</label>
-						);
-					}
-					if (type === "select") {
-						return (
-							<label className={s.label} key={id}>
-								{id}
-								<Select
-									options={options?.map((item) => {
-										if (
-											Array.isArray(item) &&
-											item.length === 2
-										) {
-											const [label, value] = item;
-											return { label, value };
-										}
-										return { label: item, value: item };
-									})}
-									value={update[id] ? update[id] : value}
-									onChange={(e) =>
-										setUpdate((prev) => ({
-											...prev,
-											[id]: e,
-										}))
-									}
-								/>
-							</label>
-						);
-					}
-					if (type === "checkbox") {
-						return (
-							<label className={s.flex} key={id}>
-								{id}
-								<Switch
-									value={
-										update[id]
-											? Boolean(value[id])
-											: Boolean(value)
-									}
-									onChange={(e) =>
-										setUpdate((prev) => ({
-											...prev,
-											[id]: e ? "1" : "0",
-										}))
-									}
-								/>
-							</label>
-						);
-					}
+				{settings.map(({ id, edit, value }: SettingsProps) => {
 					return (
-						<label className={s.flex} key={id}>
+						<label className={s.label} key={id}>
 							{id}
-							<input type={type} value={value} />
+							<Input
+								disabled={!edit}
+								value={update[id] ? update[id] : value}
+								onChange={(e) =>
+									setUpdate((prev) => ({
+										...prev,
+										[id]: e.target.value,
+									}))
+								}
+							/>
 						</label>
 					);
 				})}

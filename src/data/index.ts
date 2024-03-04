@@ -15,6 +15,7 @@ export {
 	HallSettingsModules,
 	HallSettingsBalance,
 	BalanceOperation,
+	BalanceInfo,
 	getPlayers,
 	getSessions,
 	getSessionLog,

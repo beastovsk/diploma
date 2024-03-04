@@ -9,6 +9,7 @@ import {
 	RtpTable,
 	CreateAgent,
 	Search,
+	CurrencySettings,
 } from "../../components";
 import { AgentSettings, HallSettings } from "..";
 
@@ -47,7 +48,11 @@ export const Home = () => {
 							</>
 						}
 					/>
-					<Route path="/my-balance" element={<>/my-balance</>} />
+					<Route path="/my-balance" element={<CurrencySettings />} />
+					<Route
+						path="/my-balance/*"
+						element={<BalanceSettings isHiddenActions />}
+					/>
 					<Route path="/create-agent" element={<CreateAgent />} />
 					<Route
 						path="/agent/:id/settings"

@@ -1,13 +1,21 @@
 import { DatePicker, Empty, Input, Radio } from "antd";
 import { Button } from "../../shared";
 import s from "./BalanceSettings.module.scss";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useState } from "react";
 import { useMutation } from "react-query";
-import { BalanceOperation, HallSettingsBalance } from "../../data";
+import {
+	BalanceOperation,
+	HallSettingsBalance,
+	useProfileStore,
+} from "../../data";
 import { useLocation } from "react-router";
 import dayjs from "dayjs";
 
 import loader from "../../assets/loader.svg";
+
+type BalanceSettingsProps = {
+	isHiddenActions?: boolean;
+};
 
 type AccountProps = {
 	id: string;
@@ -45,7 +53,7 @@ const getDate = (pos, date = new Date()) => {
 	}`;
 };
 
-export const BalanceSettings = () => {
+export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
 	const { pathname, search } = useLocation();
 	const [account, setAccount] = useState({} as AccountProps);
 	const [filterDate, setFilterDate] = useState(["", ""]);
@@ -55,20 +63,26 @@ export const BalanceSettings = () => {
 		cash: "",
 		data: { comment: "" },
 	} as RequestBalanceOperation);
+	const { userInfo } = useProfileStore();
 	const { mutate, isLoading } = useMutation(HallSettingsBalance);
 	const { mutate: operationMutate, isLoading: isOperationLoading } =
 		useMutation(BalanceOperation);
+	const id = useMemo(() => {
+		return pathname.split("/")[2] === "my-balance"
+			? String(userInfo.id)
+			: pathname.split("/")[3];
+	}, [userInfo.id]);
 
 	useEffect(() => {
-		const currentId = pathname.split("/")[3];
 		const currency = search.split("=")[1];
+		if (!userInfo.id) return;
 
 		setAccount({} as SetStateAction<AccountProps>);
 		setUpdate({} as SetStateAction<RequestBalanceOperation>);
 
 		mutate(
 			{
-				id: currentId,
+				id,
 				date: filterDate.includes("")
 					? [getDate("from"), getDate("to")]
 					: filterDate,
@@ -86,11 +100,10 @@ export const BalanceSettings = () => {
 				},
 			}
 		);
-	}, [pathname]);
+	}, [pathname, userInfo.id]);
 
 	const handleSubmitOperation = () => {
 		const currency = search.split("=")[1];
-		const currentId = pathname.split("/")[3];
 
 		if (Object.keys(update).length < 3) return;
 		const data = { ...update, currency };
@@ -100,7 +113,7 @@ export const BalanceSettings = () => {
 				setUpdate({} as SetStateAction<RequestBalanceOperation>);
 				mutate(
 					{
-						id: currentId,
+						id,
 						date: filterDate.includes("")
 							? [getDate("from"), getDate("to")]
 							: filterDate,
@@ -164,60 +177,65 @@ export const BalanceSettings = () => {
 						))}
 					</div>
 				</label>
-				<label className={s.label}>
-					Operation
-					<Radio.Group
-						defaultValue={"in"}
-						value={update.operation}
-						onChange={(e) =>
-							setUpdate((prev) => ({
-								...prev,
-								operation: e.target.value,
-							}))
-						}
-					>
-						<Radio value={"in"} defaultChecked>
-							In
-						</Radio>
-						<Radio value={"out"}>Out</Radio>
-					</Radio.Group>
-				</label>
-				<label className={s.label}>
-					Amount
-					<Input
-						value={update.cash}
-						type="number"
-						suffix={account.currency}
-						onChange={(e) =>
-							setUpdate((prev) => ({
-								...prev,
-								cash: e.target.value,
-							}))
-						}
-					/>
-				</label>
-				<label className={s.label}>
-					Comment
-					<Input.TextArea
-						value={update.data?.comment}
-						style={{ height: 120, resize: "none" }}
-						onChange={(e) =>
-							setUpdate((prev) => ({
-								...prev,
-								data: { comment: e.target.value },
-							}))
-						}
-					/>
-				</label>
 
-				<Button
-					size="large"
-					type="primary"
-					onClick={handleSubmitOperation}
-					isLoading={isOperationLoading}
-				>
-					Отправить
-				</Button>
+				{!isHiddenActions ? (
+					<>
+						<label className={s.label}>
+							Operation
+							<Radio.Group
+								defaultValue={"in"}
+								value={update.operation}
+								onChange={(e) =>
+									setUpdate((prev) => ({
+										...prev,
+										operation: e.target.value,
+									}))
+								}
+							>
+								<Radio value={"in"} defaultChecked>
+									In
+								</Radio>
+								<Radio value={"out"}>Out</Radio>
+							</Radio.Group>
+						</label>
+						<label className={s.label}>
+							Amount
+							<Input
+								value={update.cash}
+								type="number"
+								suffix={account.currency}
+								onChange={(e) =>
+									setUpdate((prev) => ({
+										...prev,
+										cash: e.target.value,
+									}))
+								}
+							/>
+						</label>
+						<label className={s.label}>
+							Comment
+							<Input.TextArea
+								value={update.data?.comment}
+								style={{ height: 120, resize: "none" }}
+								onChange={(e) =>
+									setUpdate((prev) => ({
+										...prev,
+										data: { comment: e.target.value },
+									}))
+								}
+							/>
+						</label>
+
+						<Button
+							size="large"
+							type="primary"
+							onClick={handleSubmitOperation}
+							isLoading={isOperationLoading}
+						>
+							Отправить
+						</Button>
+					</>
+				) : null}
 			</div>
 			<div className={s.logs}>
 				<div className={s.header}>

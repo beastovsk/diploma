@@ -1,8 +1,8 @@
 import { Select, Switch } from "antd";
 import s from "./CurrencySettings.module.scss";
-import { AgentSettings, useProfileStore } from "../../data";
+import { AgentSettings, BalanceInfo, useProfileStore } from "../../data";
 import { useMutation } from "react-query";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { SetStateAction, useEffect, useState } from "react";
 import loader from "../../assets/loader.svg";
 import { Button } from "../../shared";
@@ -19,37 +19,43 @@ type SettingsProps = {
 
 export const CurrencySettings = () => {
 	const { pathname } = useLocation();
-	const navigate = useNavigate();
 	const { mutate, isLoading } = useMutation(AgentSettings);
+	const { mutate: getBalance, isLoading: isBalanceLoading } =
+		useMutation(BalanceInfo);
 	const { userInfo } = useProfileStore();
-
 	const [settings, setSettings] = useState<SettingsProps>(
 		{} as SettingsProps
 	);
 	const [currency, setCurrency] = useState("");
+	const page = pathname.split("/").at(-1);
+	const id = pathname.split("/").at(-2);
+	const isPersonalBalance = page === "my-balance";
 
 	useEffect(() => {
-		const currentId = pathname.split("/").at(-2);
-		if (currentId == String(userInfo?.id)) {
-			return navigate("/dashboard/settings");
+		if (!userInfo.id) return;
+
+		if (isPersonalBalance) {
+			return getBalance(
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				{},
+				{
+					onSuccess: (res) => {
+						console.log(res);
+						handleParseResponse(res);
+					},
+				}
+			);
 		}
 		mutate(
-			{ id: currentId, settings: ["currency"] },
+			{ id, settings: ["currency"] },
 			{
 				onSuccess: (res) => {
 					handleParseResponse(res);
 				},
 			}
 		);
-	}, [pathname]);
-
-	if (!settings) {
-		return (
-			<div className="loader">
-				<img src={loader} width={50} height={50} />
-			</div>
-		);
-	}
+	}, [pathname, userInfo]);
 
 	const handleParseResponse = (res: {
 		data: { content: { elements: [] }[] };
@@ -85,11 +91,9 @@ export const CurrencySettings = () => {
 	};
 
 	const handleSubmitForm = () => {
-		const currentId = pathname.split("/").at(-2);
-
 		mutate(
 			{
-				id: currentId,
+				id,
 				settings: ["currency"],
 				update: {
 					currency: {
@@ -100,7 +104,7 @@ export const CurrencySettings = () => {
 			{
 				onSuccess: () => {
 					mutate(
-						{ id: currentId, settings: ["currency"] },
+						{ id, settings: ["currency"] },
 						{
 							onSuccess: (res) => {
 								handleParseResponse(res);
@@ -111,6 +115,14 @@ export const CurrencySettings = () => {
 			}
 		);
 	};
+
+	if (!settings) {
+		return (
+			<div className="loader">
+				<img src={loader} width={50} height={50} />
+			</div>
+		);
+	}
 
 	return (
 		<div className={s.container}>
@@ -156,7 +168,7 @@ export const CurrencySettings = () => {
 			</div>
 
 			<Button
-				isLoading={isLoading}
+				isLoading={isLoading || isBalanceLoading}
 				type="primary"
 				size="large"
 				onClick={() => handleSubmitForm()}
