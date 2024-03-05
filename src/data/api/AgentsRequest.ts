@@ -1,6 +1,10 @@
 import axios from "axios";
 
-export const AgentsRequest = (data: { parent: number; date?: string[] }) => {
+export const AgentsRequest = (data: {
+	parent: number;
+	date?: string[];
+	totals?: number;
+}) => {
 	return axios.post(
 		"http://localhost/index.php",
 		{

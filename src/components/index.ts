@@ -20,3 +20,4 @@ export { RtpTable } from "./RtpTable";
 export { CreateAgent } from "./CreateAgent";
 export { Search } from "./Search";
 export { MainHallSettings } from "./MainHallSettings";
+export { AgentsTotal } from "./AgentsTotal";

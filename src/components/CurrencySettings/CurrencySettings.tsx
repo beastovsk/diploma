@@ -20,7 +20,7 @@ type SettingsProps = {
 export const CurrencySettings = ({
 	isHiddenActions = false,
 }: {
-	isHiddenActions: boolean;
+	isHiddenActions?: boolean;
 }) => {
 	const { pathname } = useLocation();
 	const { mutate, isLoading } = useMutation(AgentSettings);
