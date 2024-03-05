@@ -48,7 +48,7 @@ export const Home = () => {
 							</>
 						}
 					/>
-					<Route path="/my-balance" element={<CurrencySettings />} />
+					<Route path="/my-balance" element={<CurrencySettings isHiddenActions />} />
 					<Route
 						path="/my-balance/*"
 						element={<BalanceSettings isHiddenActions />}

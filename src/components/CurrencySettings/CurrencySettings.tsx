@@ -17,7 +17,11 @@ type SettingsProps = {
 	canAdd: string[];
 };
 
-export const CurrencySettings = () => {
+export const CurrencySettings = ({
+	isHiddenActions = false,
+}: {
+	isHiddenActions: boolean;
+}) => {
 	const { pathname } = useLocation();
 	const { mutate, isLoading } = useMutation(AgentSettings);
 	const { mutate: getBalance, isLoading: isBalanceLoading } =
@@ -154,27 +158,31 @@ export const CurrencySettings = () => {
 					</div>
 				))}
 
-				<div className={s.flex}>
-					canAdd
-					<Select
-						value={currency}
-						onChange={(e) => setCurrency(e)}
-						options={settings?.canAdd?.map((currency) => ({
-							label: currency,
-							value: currency,
-						}))}
-					/>
-				</div>
+				{!isHiddenActions ? (
+					<div className={s.flex}>
+						canAdd
+						<Select
+							value={currency}
+							onChange={(e) => setCurrency(e)}
+							options={settings?.canAdd?.map((currency) => ({
+								label: currency,
+								value: currency,
+							}))}
+						/>
+					</div>
+				) : null}
 			</div>
 
-			<Button
-				isLoading={isLoading || isBalanceLoading}
-				type="primary"
-				size="large"
-				onClick={() => handleSubmitForm()}
-			>
-				Отправить
-			</Button>
+			{!isHiddenActions ? (
+				<Button
+					isLoading={isLoading || isBalanceLoading}
+					type="primary"
+					size="large"
+					onClick={() => handleSubmitForm()}
+				>
+					Отправить
+				</Button>
+			) : null}
 		</div>
 	);
 };
