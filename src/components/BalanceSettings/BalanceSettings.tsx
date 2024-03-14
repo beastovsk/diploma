@@ -1,4 +1,4 @@
-import { DatePicker, Empty, Input, Radio } from "antd";
+import { DatePicker, Empty, Input, Radio, notification } from "antd";
 import { Button } from "../../shared";
 import s from "./BalanceSettings.module.scss";
 import { SetStateAction, useEffect, useMemo, useState } from "react";
@@ -53,7 +53,9 @@ const getDate = (pos, date = new Date()) => {
 	}`;
 };
 
-export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
+export const BalanceSettings = ({
+	isHiddenActions = false,
+}: BalanceSettingsProps) => {
 	const { pathname, search } = useLocation();
 	const [account, setAccount] = useState({} as AccountProps);
 	const [filterDate, setFilterDate] = useState(["", ""]);
@@ -63,6 +65,7 @@ export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
 		cash: "",
 		data: { comment: "" },
 	} as RequestBalanceOperation);
+	const [isBlockedActions, setIsBlockedActions] = useState(isHiddenActions);
 	const { userInfo } = useProfileStore();
 	const { mutate, isLoading } = useMutation(HallSettingsBalance);
 	const { mutate: operationMutate, isLoading: isOperationLoading } =
@@ -72,6 +75,7 @@ export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
 			? String(userInfo.id)
 			: pathname.split("/")[3];
 	}, [userInfo.id]);
+	const [api, contextHolder] = notification.useNotification();
 
 	useEffect(() => {
 		const currency = search.split("=")[1];
@@ -102,6 +106,16 @@ export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
 		);
 	}, [pathname, userInfo.id]);
 
+	const openNotification = (content: { error?: string }) => {
+		const { error } = content;
+
+		api.info({
+			message: error ? "Error" : "Success",
+			description: error ? error : "",
+			placement: "topRight",
+		});
+	};
+
 	const handleSubmitOperation = () => {
 		const currency = search.split("=")[1];
 
@@ -109,7 +123,11 @@ export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
 		const data = { ...update, currency };
 
 		operationMutate(data as RequestBalanceOperation, {
-			onSuccess: () => {
+			onSuccess: ({ data }) => {
+				if (data.error) {
+					openNotification({ error: data.error });
+					return setIsBlockedActions(true);
+				}
 				setUpdate({} as SetStateAction<RequestBalanceOperation>);
 				mutate(
 					{
@@ -162,6 +180,7 @@ export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
 
 	return Object.keys(account).length ? (
 		<div className={s.container}>
+			{contextHolder}
 			<div className={s.account}>
 				<label className={s.label}>
 					Login
@@ -178,7 +197,7 @@ export const BalanceSettings = ({ isHiddenActions }: BalanceSettingsProps) => {
 					</div>
 				</label>
 
-				{!isHiddenActions ? (
+				{!isBlockedActions ? (
 					<>
 						<label className={s.label}>
 							Operation

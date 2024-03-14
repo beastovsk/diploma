@@ -10,19 +10,6 @@ import loader from "../../assets/loader.svg";
 import s from "./HallPlayersSettings.module.scss";
 import { NavLink } from "react-router-dom";
 
-const getDateMonthAgo = (date) => {
-	const currentMonth = date.split(" ")[0].split("-")[1];
-	const newMonth = String(Number(currentMonth) - 1);
-
-	return `${date.slice(0, 4)}-${
-		currentMonth === "01"
-			? "12"
-			: newMonth.length === 1
-			? `0${newMonth}`
-			: newMonth
-	}${date.slice(7)}`;
-};
-
 const getDate = (date = new Date()) => {
 	const current = new Intl.DateTimeFormat("en-US", {
 		day: "2-digit",
@@ -58,10 +45,7 @@ export const HallPlayersSettings = () => {
 
 	useEffect(() => {
 		const hallId = pathname.split("/").at(-2);
-		let date = [
-			`${getDateMonthAgo(getDate())} 00:00`,
-			`${getDate()} 23:59`,
-		];
+		let date = [`${getDate()} 00:00`, `${getDate()} 23:59`];
 
 		setFiltersValue({ date: ["", ""], time: ["", ""] });
 
@@ -91,7 +75,7 @@ export const HallPlayersSettings = () => {
 		const hallId = pathname.split("/").at(-2);
 		const { date, time, login, ...args } = filtersValue;
 		const fullDate = [
-			`${date[0] || getDateMonthAgo(getDate())} ${time[0] || "00:00"}`,
+			`${date[0] || getDate()} ${time[0] || "00:00"}`,
 			`${date[1] || getDate()} ${time[1] || "23:59"}`,
 		];
 
@@ -140,7 +124,7 @@ export const HallPlayersSettings = () => {
 						format={"YYYY.MM.DD"}
 						value={
 							filtersValue.date[0] === ""
-								? dayjs(getDateMonthAgo(getDate()))
+								? dayjs(getDate())
 								: dayjs(filtersValue.date[0])
 						}
 						onChange={(val) => {

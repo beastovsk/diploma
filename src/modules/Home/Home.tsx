@@ -10,6 +10,7 @@ import {
 	Search,
 	CurrencySettings,
 	AgentsTotal,
+	StatisticTable,
 } from "../../components";
 import { AgentSettings, HallSettings } from "..";
 
@@ -24,23 +25,10 @@ export const Home = () => {
 						path="/"
 						element={<Navigate to="/dashboard/statistic" />}
 					/>
-					<Route path="/statistic/*" element={<AgentsTotal />} />
-					<Route
-						path="/hall-settings/*"
-						element={
-							<>
-								<HallSettings />
-							</>
-						}
-					/>{" "}
-					<Route
-						path="/search"
-						element={
-							<>
-								<Search />
-							</>
-						}
-					/>
+					<Route path="/statistic" element={<AgentsTotal />} />
+					<Route path="/statistic/*" element={<StatisticTable />} />
+					<Route path="/hall-settings/*" element={<HallSettings />} />
+					<Route path="/search" element={<Search />} />
 					<Route
 						path="/my-balance"
 						element={<CurrencySettings isHiddenActions />}

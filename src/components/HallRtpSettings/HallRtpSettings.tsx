@@ -9,19 +9,6 @@ import loader from "../../assets/loader.svg";
 
 import s from "./HallRtpSettings.module.scss";
 
-const getDateMonthAgo = (date) => {
-	const currentMonth = date.split(" ")[0].split("-")[1];
-	const newMonth = String(Number(currentMonth) - 1);
-
-	return `${date.slice(0, 4)}-${
-		currentMonth === "01"
-			? "12"
-			: newMonth.length === 1
-			? `0${newMonth}`
-			: newMonth
-	}${date.slice(7)}`;
-};
-
 const getDate = (date = new Date()) => {
 	const current = new Intl.DateTimeFormat("en-US", {
 		day: "2-digit",
@@ -55,7 +42,7 @@ export const HallRtpSettings = () => {
 
 	useEffect(() => {
 		const hallId = pathname.split("/").at(-2);
-		let date = [`${getDateMonthAgo(getDate())}`, `${getDate()}`];
+		let date = [`${getDate()}`, `${getDate()}`];
 		setFiltersValue({ date: ["", ""], time: ["", ""] });
 
 		if (search) {
@@ -81,10 +68,7 @@ export const HallRtpSettings = () => {
 	const handleFiltersSubmit = () => {
 		const hallId = pathname.split("/").at(-2);
 		const { date, ...args } = filtersValue;
-		const fullDate = [
-			`${date[0] || getDateMonthAgo(getDate())}`,
-			`${date[1] || getDate()}`,
-		];
+		const fullDate = [`${date[0] || getDate()}`, `${date[1] || getDate()}`];
 
 		navigate({
 			search: `from=${fullDate[0].split(" ").join("_")}&to=${fullDate[1]
@@ -118,7 +102,7 @@ export const HallRtpSettings = () => {
 						format={"YYYY.MM.DD"}
 						value={
 							filtersValue.date[0] === ""
-								? dayjs(getDateMonthAgo(getDate()))
+								? dayjs(getDate())
 								: dayjs(filtersValue.date[0])
 						}
 						onChange={(val) => {

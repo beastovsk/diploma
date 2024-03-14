@@ -1,13 +1,13 @@
 import { useMutation } from "react-query";
 import s from "./AgentsTotal.module.scss";
-import { AgentsRequest, useProfileStore } from "../../data";
+import { AgentsRequest, ProjectsRequest, useProfileStore } from "../../data";
 import { useEffect, useState } from "react";
 import {
 	getDate,
-	getDateMonthAgo,
 	getFormattedUsersTree,
 	getValidTime,
 } from "../../utils";
+import cx from "classnames";
 import { useLocation, useNavigate } from "react-router";
 import {
 	Button,
@@ -17,13 +17,31 @@ import {
 	Select,
 	Skeleton,
 	TimePicker,
+	Tooltip,
 } from "antd";
 import dayjs from "dayjs";
 import loader from "../../assets/loader.svg";
+import { NavLink } from "react-router-dom";
+import settings from "../../assets/agent-settings.svg";
+
+type HallProp = {
+	id: string;
+	name: string;
+	balance: string;
+	currency: string;
+	bet: string;
+	win: string;
+	profit: string;
+	rtp: string;
+};
 
 export const AgentsTotal = () => {
 	const navigate = useNavigate();
 	const { mutate, isLoading } = useMutation(AgentsRequest);
+	const { mutate: mutateProject, isLoading: isProjectLoading } =
+		useMutation(ProjectsRequest);
+	const [halls, setHalls] = useState([]);
+	const [adminIds, setAdminIds] = useState([]);
 	const { userInfo } = useProfileStore();
 	const { search } = useLocation();
 	const [filters, setFilters] = useState({});
@@ -32,6 +50,8 @@ export const AgentsTotal = () => {
 		time: ["", ""],
 	});
 	const [agents, setAgents] = useState([]);
+
+	console.log(adminIds);
 
 	const handleFiltersSubmit = () => {
 		const { date, time, ...args } = filtersValue;
@@ -61,10 +81,103 @@ export const AgentsTotal = () => {
 						data: data.content?.list,
 						parentId: 0,
 					});
+					agents.map(({ id }) =>
+						setAdminIds((prev) => [...prev, id])
+					);
 					setFilters(data.content.filters);
 					setAgents(agents);
 				},
 			}
+		);
+	};
+
+	const handleLoginRequest = ({ parent }) => {
+		setHalls([]);
+
+		const { date, time } = filtersValue;
+
+		const fullDate = [
+			`${date[0] || getDate()} ${time[0] || "00:00"}`,
+			`${date[1] || getDate()} ${time[1] || "23:59"}`,
+		];
+
+		mutateProject(
+			{ parent, date: fullDate },
+			{
+				onSuccess: ({ data }) => {
+					setHalls(data?.content.list);
+				},
+			}
+		);
+	};
+
+	const getTooltipTitle = () => {
+		return halls.length ? (
+			<div>
+				<table>
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>name</th>
+							<th>balance</th>
+							<th>currency</th>
+							<th>bet</th>
+							<th>win</th>
+							<th>profit</th>
+							<th>rtp</th>
+						</tr>
+					</thead>
+					<tbody>
+						{halls?.length
+							? halls?.map(
+									({
+										id,
+										name,
+										balance,
+										currency,
+										bet,
+										win,
+										profit,
+										rtp,
+									}: HallProp) => (
+										<tr key={id}>
+											<th>{id}</th>
+											<th>
+												<span className={s.hallName}>
+													{name}
+													<NavLink
+														to={`/dashboard/hall-settings/${id}`}
+														className={s.icon}
+													>
+														<img
+															src={settings}
+															width={20}
+															height={20}
+														/>
+													</NavLink>
+												</span>
+											</th>
+											<th>{balance}</th>
+											<th>{currency}</th>
+											<th>{bet}</th>
+											<th>{win}</th>
+											<th>{profit}</th>
+											<th>{rtp}</th>
+										</tr>
+									)
+							  )
+							: null}
+					</tbody>
+				</table>
+			</div>
+		) : isProjectLoading || halls.length ? (
+			<div className="loader">
+				<img src={loader} width={50} height={50} />
+			</div>
+		) : (
+			<div className="empty">
+				<Empty description="Список холлов пуст. Создайте новый" />
+			</div>
 		);
 	};
 
@@ -77,10 +190,30 @@ export const AgentsTotal = () => {
 					{childAgents ? <tr className={s.empty}></tr> : null}
 					<tr key={id}>
 						<th>{id}</th>
-						<th>{login}</th>
-						{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-						{/* @ts-expect-error */}
-						<th>{currency != 0 ? currency : ""}</th>
+						<th
+							className={s.loginTh}
+							onMouseEnter={() =>
+								handleLoginRequest({ parent: id })
+							}
+						>
+							<p
+								className={cx(s.login, {
+									[s.agentLogin]: !adminIds.includes(id),
+								})}
+							>
+								<Tooltip
+									placement="bottom"
+									overlayInnerStyle={{
+										width: "max-content",
+										minWidth: "500px",
+									}}
+									title={getTooltipTitle()}
+								>
+									{login}
+								</Tooltip>
+							</p>
+						</th>
+						<th>{currency != "0" ? currency : ""}</th>
 						{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 						{/* @ts-expect-error */}
 						<th>{statistic?.in}</th>
@@ -104,7 +237,7 @@ export const AgentsTotal = () => {
 		setFiltersValue({ date: ["", ""], time: ["", ""] });
 		setAgents([]);
 		let date = [
-			`${getDateMonthAgo(getDate())} 00:00`,
+			`${getDate()} 00:00`,
 			`${getDate()} 23:59`,
 		];
 
@@ -135,6 +268,11 @@ export const AgentsTotal = () => {
 					const { agents } = getFormattedUsersTree({
 						data: data.content?.list,
 						parentId: 0,
+					});
+					agents.map(({ id }) => {
+						if (adminIds.includes(id)) return;
+
+						setAdminIds((prev) => [...prev, id]);
 					});
 					setFilters(data.content.filters);
 					setAgents(agents);

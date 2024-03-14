@@ -1,9 +1,5 @@
 import { useMutation } from "react-query";
-import {
-	getRtpData,
-	useFilterStore,
-	useProfileStore,
-} from "../../data";
+import { getRtpData, useFilterStore, useProfileStore } from "../../data";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { DatePicker, Empty, Select, Skeleton } from "antd";
@@ -12,19 +8,6 @@ import dayjs from "dayjs";
 import loader from "../../assets/loader.svg";
 
 import s from "./RtpTable.module.scss";
-
-const getDateMonthAgo = (date) => {
-	const currentMonth = date.split(" ")[0].split("-")[1];
-	const newMonth = String(Number(currentMonth) - 1);
-
-	return `${date.slice(0, 4)}-${
-		currentMonth === "01"
-			? "12"
-			: newMonth.length === 1
-			? `0${newMonth}`
-			: newMonth
-	}${date.slice(7)}`;
-};
 
 const getDate = (date = new Date()) => {
 	const current = new Intl.DateTimeFormat("en-US", {
@@ -49,7 +32,7 @@ export const RtpTable = () => {
 	const { mutate, isSuccess, isLoading } = useMutation(getRtpData);
 
 	useEffect(() => {
-		let date = [`${getDateMonthAgo(getDate())}`, `${getDate()}`];
+		let date = [`${getDate()} 00:00`, `${getDate()} 23:59`];
 		setFiltersValue({ date: ["", ""] });
 
 		if (!userInfo?.id) return;
@@ -74,10 +57,7 @@ export const RtpTable = () => {
 
 	const handleFiltersSubmit = () => {
 		const { date, ...args } = filtersValue;
-		const fullDate = [
-			`${date[0] || getDateMonthAgo(getDate())}`,
-			`${date[1] || getDate()}`,
-		];
+		const fullDate = [`${date[0] || getDate()}`, `${date[1] || getDate()}`];
 
 		navigate({
 			search: `from=${fullDate[0].split(" ").join("_")}&to=${fullDate[1]
@@ -110,7 +90,7 @@ export const RtpTable = () => {
 						format={"YYYY.MM.DD"}
 						value={
 							filtersValue.date[0] === ""
-								? dayjs(getDateMonthAgo(getDate()))
+								? dayjs(getDate())
 								: dayjs(filtersValue.date[0])
 						}
 						onChange={(val) => {

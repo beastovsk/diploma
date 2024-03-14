@@ -75,3 +75,24 @@ table {
 .empty {
 	height: 44px;
 }
+
+.login {
+	cursor: pointer;
+	transition: all 0.3;
+
+	&:hover {
+		opacity: 0.7;
+	}
+}
+
+.loginTh {
+	text-align: left;
+}
+.agentLogin {
+	margin-left: 20px;
+
+	&::before {
+		content: "-";
+		margin-right: 10px;
+	}
+}
