@@ -1,0 +1,45 @@
+.firstfrombase {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f2f5; 
+    padding: 20px;
+    padding-left: 200px;
+    
+}
+
+.left, .right {
+    flex: 1;
+}
+
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+p span {
+    color: #888; 
+}
+
+p {
+    color: black;
+    font-size: 14px;
+    line-height: 1.5;
+}
