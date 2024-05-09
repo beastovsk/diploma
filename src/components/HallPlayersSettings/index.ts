@@ -1,1 +1,0 @@
-export { HallPlayersSettings } from "./HallPlayersSettings";

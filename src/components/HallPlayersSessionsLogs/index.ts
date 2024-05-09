@@ -1,1 +1,0 @@
-export { HallPlayersSessionsLogs } from "./HallPlayersSessionsLogs";

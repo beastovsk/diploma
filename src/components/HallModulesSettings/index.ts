@@ -1,1 +1,0 @@
-export { HallModulesSettings } from "./HallModulesSettings";

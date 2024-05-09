@@ -1,1 +1,0 @@
-export { HallSettings } from "./HallSettings";

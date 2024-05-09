@@ -1,1 +1,0 @@
-export { HallTestApiSettings } from "./HallTestApiSettings";

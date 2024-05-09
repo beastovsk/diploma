@@ -1,0 +1,163 @@
+@import "../../mixins.scss";
+
+.container {
+	@include container;
+	color: #333;
+}
+
+.wrapper {
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.row {
+	display: flex;
+	gap: 20px;
+	align-items: center;
+}
+
+.colMin {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.mb {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.activeButton {
+	background-color: #ee3338 !important;
+	color: #fff !important;
+
+	border: none;
+}
+.button {
+	border: 1px solid #ee3338;
+	border-radius: 5px;
+	color: #333;
+	padding: 8px 15px;
+	background: #fff;
+	cursor: pointer;
+	-webkit-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+	font-size: 18px;
+
+	&:hover {
+		background-color: #ee3338 !important;
+		color: #fff !important;
+	}
+}
+
+.red {
+	color: #ee3338;
+}
+
+.nav {
+	width: 100%;
+	background: #ee3338;
+	padding: 10px 0;
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+	color: #fff;
+	font-size: 18px;
+}
+
+.item {
+	// padding: 20px;
+	width: 210px;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	margin-top: 20px;
+	margin-bottom: 10px;
+	-webkit-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+	position: relative;
+	margin-bottom: 40px;
+	padding-bottom: 20px;
+	min-height: 500px;
+}
+
+.header {
+	background: #ee3338;
+	padding: 20px;
+	color: #fff;
+	padding-bottom: 40px;
+	border-radius: 10px 10px 0 0;
+}
+
+.wrapper {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+}
+
+.price {
+	margin-top: -60px;
+	padding: 20px;
+	z-index: 3;
+	margin-bottom: 20px;
+	background: #fff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+	i {
+		text-decoration: line-through;
+	}
+	p {
+		text-align: center;
+	}
+}
+.planButton {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -20px;
+	margin-left: auto;
+	margin-right: auto;
+	width: max-content;
+}
+
+.desc {
+	color: #333;
+	margin-top: 20px;
+	font-size: 14px;
+	text-align: center;
+}
+
+.content {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	align-items: start;
+}
+
+.qa {
+	width: 70%;
+	margin: 40px auto;
+}
+
+.text {
+	color: #333;
+	display: flex;
+	flex-direction: column;
+	margin: 20px 0;
+}
+
+.subtitle {
+	font-weight: bold;
+	font-size: 18px;
+	margin-top: 20px;
+}

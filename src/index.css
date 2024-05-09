@@ -1,11 +1,13 @@
+@import "./mixins.scss";
+
 :root {
 	font-family: Inter, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
 
 	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	background-color: #3c3b40;
+	color: #111;
+	background-color: #fff;
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -65,9 +67,9 @@ p {
 	border-radius: 15px !important;
 }
 
-.ant-input {
+/* .ant-input {
 	border: none !important;
-}
+} */
 .ant-input-affix-wrapper {
 	.ant-input {
 		background: transparent !important;

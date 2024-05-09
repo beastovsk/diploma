@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const SearchInfo = (data) => {
 	return axios.post(
-		"http://localhost/index.php",
+		"./index.php",
 		{
 			cmd: "search",
 			token: localStorage.getItem("token"),

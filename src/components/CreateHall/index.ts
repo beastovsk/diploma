@@ -1,1 +1,0 @@
-export { CreateHall } from "./CreateHall";
