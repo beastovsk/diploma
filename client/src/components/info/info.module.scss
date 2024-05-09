@@ -1,29 +1,40 @@
+@import "../../mixins.scss";
 
-.infoBase {
-    display: flex;
-    @include container;
+.container {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+	@include container;
+	padding-top: 40px;
 }
 
-.left {
-    width: 50%;
+.title {
+	margin-bottom: 10px;
 }
 
-.right {
-    width: 50%;
-}
-
-.title{
-    margin-bottom: 10px;
+.image {
+	width: 500px;
+	border-radius: 15px;
 }
 
 .button {
-    margin-top: 10px;
-    background-color: #ff4d4f;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 30%;
+	margin-top: 10px;
+	background-color: #ff4d4f;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 5px;
+	font-size: 18px;
+	margin-top: 20px;
+}
+
+.title {
+	font-size: 24px;
+    font-weight: bold;
+}
+.text {
+	font-size: 18px;
+    color: #333;
 }
